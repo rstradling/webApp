@@ -1,0 +1,17 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+metadata:
+  name: arbitrary
+resources:
+  - ../../base
+  - ./postgres-configmap.yaml
+  - ./postgres-pv.yaml
+  - ./postgres-pvc.yaml
+  - ./postgres-deployment.yaml
+  - ./postgres-service.yaml
+namespace: default
+patches:
+  - path: hpa.yaml
+  - path: deployment.yaml
+
+
