@@ -28,7 +28,7 @@ class UserRepoPostgres[F[_]](transactor: Transactor[F])(using e: Async[F]) exten
       .void
 
   def getByUserIdQuery(userId: Long) =
-    sql"""SELECT "userId", "firstName", "lastName", "email", "phone", "address"
+    sql"""SELECT "userId", "email"
           FROM users
           WHERE "userId"=${userId}"""
       .query[User]
