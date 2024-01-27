@@ -7,13 +7,21 @@ import doobie.implicits.*
 import doobie.hikari.*
 
 object Db:
+  case class DbConfig(driverName: String, db: String, host: String, port: Int, user: String, password: String)
   def mkConnection[F[_]](
-                          driverName: String,
-                          url: String,
-                          user: String,
-                          password: String
-                        )(using e : Async[F]): Resource[F, HikariTransactor[F]] =
+                        dbConfig: DbConfig
+                        )(using e : Async[F]): Resource[F, Transactor[F]] =
     for
       ce <- ExecutionContexts.fixedThreadPool[F](32)
-      xa <- HikariTransactor.newHikariTransactor[F](driverName, url, user, password, ce)
+      url = s"jdbc:postgresql://${dbConfig.host}:${dbConfig.port}/${dbConfig.db}"
+      xa <- HikariTransactor.newHikariTransactor[F](dbConfig.driverName, url, dbConfig.user, dbConfig.password, ce)
     yield xa
+  def mkDbConfigFromEnv(driverName: String): DbConfig =
+    val db = sys.env.getOrElse("POSTGRES_DB", throw new RuntimeException("Must specify POSTGRES_DB env var"))
+    val pass = sys.env.getOrElse("POSTGRES_PASSWORD", throw new RuntimeException("Must specify POSTGRES_PASSWORD env var"))
+    val user = sys.env.getOrElse("POSTGRES_USER", throw new RuntimeException("Must specify POSTGRES_USER env var"))
+    val host = sys.env.getOrElse("POSTGRES_HOST", throw new RuntimeException("Must specify POSTGRES_HOST env var"))
+    val port = sys.env.getOrElse("POSTGRES_PORT", throw new RuntimeException("Must specify POSTGRES_PORT env var"))
+    DbConfig(driverName, db, host, port.toInt, user, pass)
+
+

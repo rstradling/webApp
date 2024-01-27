@@ -18,3 +18,26 @@ spec:
             - name: http
               containerPort: 8080
               protocol: TCP
+          envFrom:
+            - configMapRef:
+                name: postgres-config
+          livenessProbe:
+            timeoutSeconds: 5
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            httpGet:
+              path: /api/v1/health
+              port: http
+          readinessProbe:
+            timeoutSeconds: 5
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            httpGet:
+              path: /api/v1/ready
+              port: http
+          startupProbe:
+            initialDelaySeconds: 5
+            failureThreshold: 4
+            httpGet:
+              path: /api/v1/ready
+              port: http
