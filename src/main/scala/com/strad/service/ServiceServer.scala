@@ -18,9 +18,11 @@ object ServiceServer:
   def stream[F[_]: Async]: Stream[F, Nothing] =
     for
       client <- Stream.resource(EmberClientBuilder.default[F].build)
-      db <- Stream.resource(Db.mkConnection("org.postgresql.Driver", "jdbc:postgresql://postgres:5432/web-app", "admin", "test123"))
+      db <- Stream.resource(Db.mkConnection(Db.mkDbConfigFromEnv("org.postgresql.Driver")))
       userService = new UserServiceImpl(new UserRepoPostgres(db))
-      httpApp: Kleisli[F, Request[F], Response[F]] = (ServiceRoutes.userRoutes[F](userService)).orNotFound
+      healthService = new HealthServiceImpl(db)
+      httpApp: Kleisli[F, Request[F], Response[F]] = (ServiceRoutes.userRoutes[F](userService) <+>
+        ServiceRoutes.healthRoutes[F](healthService)).orNotFound
       finalHttpApp = Logger.httpApp(true, true)(httpApp)
       exitCode <- Stream.resource(
         EmberServerBuilder.default[F]
