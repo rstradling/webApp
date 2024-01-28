@@ -5,7 +5,6 @@ metadata:
   labels:
     app: postgres
 data:
-  # HOST AND PORT ARE FAKE FOR NOW
   POSTGRES_DB: web-app
   POSTGRES_USER: admin
   POSTGRES_PASSWORD: test123
