@@ -9,9 +9,10 @@ import org.http4s.dsl.Http4sDsl
 import org.http4s.circe.*
 import com.strad.repositories.UserRepo
 import com.strad.service.{HealthService, UserService}
+
 object ServiceRoutes:
-  def userRoutes[F[_]: Concurrent](u: UserService[F]): HttpRoutes[F] =
-    val dsl = new Http4sDsl[F]{}
+  def userRoutes[F[_] : Concurrent](u: UserService[F]): HttpRoutes[F] =
+    val dsl = new Http4sDsl[F] {}
     import dsl._
     HttpRoutes.of[F] {
       case GET -> Root / "api" / "v1" / "users" / LongVar(id) =>
@@ -24,14 +25,15 @@ object ServiceRoutes:
           _ <- u.deleteUser(id)
           resp <- Ok()
         } yield resp
-      case request @ POST -> Root / "api"/ "v1" / "users" =>
+      case request@POST -> Root / "api" / "v1" / "users" =>
         for {
           user <- request.as[UserRequest]
           userResp <- u.addUser(user)
           resp <- Ok(userResp)
         } yield resp
     }
-  def healthRoutes[F[_]: Concurrent](h: HealthService[F]): HttpRoutes[F] =
+
+  def healthRoutes[F[_] : Concurrent](h: HealthService[F]): HttpRoutes[F] =
     val dsl = new Http4sDsl[F] {}
     import dsl._
     HttpRoutes.of[F] {
