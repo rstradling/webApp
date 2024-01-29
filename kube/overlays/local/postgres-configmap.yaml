@@ -8,7 +8,4 @@ data:
   POSTGRES_DB: web-app
   POSTGRES_USER: admin
   POSTGRES_PASSWORD: test123
-  # postgres service host...can this ever change?
-  POSTGRES_HOST: "10.43.185.153"
-  POSTGRES_PORT: "5432"
 
