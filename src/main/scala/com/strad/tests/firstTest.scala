@@ -4,10 +4,9 @@ import cats.effect.*
 import org.http4s.*
 
 import com.strad.repositories.domain.User
+import com.strad.repositories.UserRepo
 
 implicit val UserEncoder: Encoder[User] = deriveEncoder[User]
-
-import com.strad.repositories.UserRepo
 
 def service[F[_]](repo: UserRepo[F])(
     implicit F: Effect[F]
