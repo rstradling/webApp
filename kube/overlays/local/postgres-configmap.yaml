@@ -8,3 +8,5 @@ data:
   POSTGRES_DB: web-app
   POSTGRES_USER: admin
   POSTGRES_PASSWORD: test123
+  POSTGRES_HOST: postgres
+  POSTGRES_PORT: "5432"
