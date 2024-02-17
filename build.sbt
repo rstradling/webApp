@@ -4,6 +4,7 @@ val logbackVersion = "1.2.13"
 val mUnitCatsEffectVersion = "1.0.7"
 val doobieVersion = "1.0.0-RC1"
 val catsEffectVersion = "3.5.2"
+val catsCoreVersion = "2.10.0"
 
 lazy val root = (project in file("."))
   .settings(
@@ -26,6 +27,7 @@ lazy val root = (project in file("."))
       "org.tpolecat"    %% "doobie-postgres"     % doobieVersion,
       "org.scalameta"   %% "munit"               % mUnitVersion           % Test,
       "org.typelevel"   %% "munit-cats-effect-3" % mUnitCatsEffectVersion % Test,
+      "org.typelevel"   %% "cats-core"           % catsCoreVersion,
     ),
     testFrameworks += new TestFramework("munit.Framework")
   )
