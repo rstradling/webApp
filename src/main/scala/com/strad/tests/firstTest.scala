@@ -25,7 +25,7 @@ def check[A](actual:        IO[Response[IO]],
     implicit ev: EntityDecoder[IO, A]
 ): Boolean = {
     val actualResp      = actual.unsafeRunSync
-    val statusCheck     = actual.Resp.status = expectedStatus
+    val statusCheck     = actualResp.status == expectedStatus
     val bodyCheck       = expectedBody.fold[Boolean](
         actualResp.body.compile.toVector.unsafeRunSync.isEmpty)( // Verify Response's body is empty
         expected => actualResp.as[A].unsafeRunSync == expected
@@ -47,7 +47,7 @@ val doesNotMatter: UserRepo[IO] = new UserRepo[IO] {
 
 @main def m(args: String*) = 
     val response1: IO[Response[IO]] = service[IO](success).orNotFound.run(
-        Request(method = Method.GET, uri = Uri.uri("/user/not-used") )
+        Request(method = Method.GET, uri = Uri.uri("/api/v1/users/123") )
     )
 
     val expectedJson = Json.obj(
