@@ -53,10 +53,17 @@ class ServiceRoutesSpec extends CatsEffectSuite:
     val status = client.status(request)
     assertIO(status, NotFound)
 
-/*  test("GET /api/v1/users/123 should return 500 when an exception is thrown"):
+  test("GET /api/v1/users/123 should return 500 when an exception is thrown"):
     val request: Request[IO] = Request(method = Method.GET, uri = uri"/api/v1/users/123")
-    val client = Client.fromHttpApp(userServiceRoutes(exception))
-    val status = client.status(request)
-    assertIO(status, NotFound)
 
- */
+    val result = try {
+      val client = Client.fromHttpApp(userServiceRoutes(exception))
+      val status = client.status(request)
+      status.unsafeRunSync()
+      Left("No exception thrown")
+    } catch {
+      case e: RuntimeException => Right(e.getMessage)
+      case _: Throwable => Left("Unexpected exception")
+    }
+
+    assert(result == Right("Should not get called!"))
