@@ -23,7 +23,7 @@ class ServiceRoutesSpec extends CatsEffectSuite:
   private val success: UserRepo[IO] = new UserRepo[IO]:
     override def getUserById(id: Long): IO[Option[User]] = IO.pure(Some(User(123, None)))
     override def insertUser(user: User): IO[User] = ???
-    override def deleteUserById(userId: Long): IO[Unit] = ???
+    override def deleteUserById(userId: Long): IO[Unit] = IO.pure(Some(User(123, None)))
 
   private val foundNone: UserRepo[IO] = new UserRepo[IO]:
     override def getUserById(id: Long): IO[Option[User]] = IO.pure(None)
@@ -67,3 +67,9 @@ class ServiceRoutesSpec extends CatsEffectSuite:
     }
 
     assert(result == Right("Should not get called!"))
+
+  test("DELETE api/v1/users/123 should return 200 OK with correct response if user exists and was deleted"):
+    val request: Request[IO] = Request(method = Method.DELETE, uri = uri"/api/v1/users/123")
+    val client = Client.fromHttpApp(userServiceRoutes(success))
+    val status = client.status(request)
+    assertIO(status, Ok)
