@@ -4,6 +4,8 @@ val logbackVersion = "1.2.13"
 val mUnitCatsEffectVersion = "1.0.7"
 val doobieVersion = "1.0.0-RC1"
 val catsEffectVersion = "3.5.2"
+val catsCoreVersion = "2.10.0"
+val circeVersion = "0.14.5"
 
 lazy val root = (project in file("."))
   .settings(
@@ -20,6 +22,8 @@ lazy val root = (project in file("."))
       "org.http4s"      %% "http4s-ember-client" % http4sVersion,
       "org.http4s"      %% "http4s-circe"        % http4sVersion,
       "org.http4s"      %% "http4s-dsl"          % http4sVersion,
+      "io.circe"        %% "circe-core"          % circeVersion,
+      "io.circe"        %% "circe-generic"       % circeVersion,
       "org.tpolecat"    %% "doobie-core"         % doobieVersion,
       "org.tpolecat"    %% "doobie-hikari"       % doobieVersion,
       "org.tpolecat"    %% "doobie-munit"        % doobieVersion          % Test,
