@@ -82,7 +82,7 @@ class ServiceRoutesSpec extends CatsEffectSuite:
     assertIO(status, Ok)
 
   test("DELETE api/v1/users/123 should return 500 when an exception is thrown"):
-    val request: Request[IO] = Request(method = Method.GET, uri = uri"/api/v1/users/123")
+    val request: Request[IO] = Request(method = Method.DELETE, uri = uri"/api/v1/users/123")
 
     val result = try {
       val client = Client.fromHttpApp(userServiceRoutes(exception))
